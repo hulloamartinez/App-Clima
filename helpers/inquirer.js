@@ -98,7 +98,7 @@ const listarLugares = async ( lugares = []) => {
     }
 
     const {id} = await inquirer.prompt(preguntas);
-    console.clear();
+    //console.clear();
     return id;
 }
 
@@ -138,6 +138,8 @@ const mostrarListadoChecklist = async( tareas = []) =>{
     const { ids } = await inquirer.prompt(pregunta);
     return ids;
 }
+
+
 
 
 module.exports = {

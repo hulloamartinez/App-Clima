@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { inquirerMenu, pausa, leerInput, listarLugares, climaLugar } = require("./helpers/inquirer");
+const { inquirerMenu, pausa, leerInput, listarLugares} = require("./helpers/inquirer");
 const Busquedas = require("./models/busquedas");
 
 //console.log(process.env)
@@ -23,7 +23,14 @@ const main = async()=>{
                 const lugares = await busquedas.ciudad(lugar);
                 // muestra los lugares y el lugar seleccionado
                 const idSeleccionado = await listarLugares(lugares);
+               if(idSeleccionado === '0')continue;
+
+                //guardar endb 
+
+                
+
                 const lugarSeleccionado = lugares.find(l => l.id === idSeleccionado);
+                await busquedas.guardarHistorial(lugarSeleccionado.nombre);
                                      
                //Clima
                const clima = await busquedas.climaLugar(lugarSeleccionado.lat, lugarSeleccionado.lng);
@@ -44,6 +51,12 @@ const main = async()=>{
                
                 
                 break;
+                case 2: 
+                //guardar hostorial
+                busquedas.historialCapitalizado.forEach( (lugar, i) =>{
+                    const idx = ` ${i + 1 } `.green;
+                    console.log (`${idx}. ${lugar} `);
+                })
                    
             
         }

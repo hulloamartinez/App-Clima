@@ -1,11 +1,13 @@
 const axios =  require('axios');
+const fs = require ('fs')
 
 class Busquedas{
 
-    historial = ['Madrid','Santiago','Lima','Chillan','Quebec','Aukland']
+    historial = [];
+    dbPath = './db/database.json';
 
     constructor(){
-        //leer DB si existe
+        this.leerDB();
 
     }
     get paramsMaxbox(){
@@ -15,6 +17,20 @@ class Busquedas{
         'language': 'es'
         
         }
+
+    }
+
+    get historialCapitalizado(){
+
+
+        return this.historial.map(lugar =>{
+
+            let palabras = lugar.split(' ');
+            palabras = palabras.map(p => p[0].toUpperCase() + p.substring(1));
+            
+            return palabras.join(' ');
+
+        });
 
     }
 
@@ -78,6 +94,45 @@ class Busquedas{
 
     }
 
+    async guardarHistorial(lugar){
+
+        //prevenir duplicados
+        if(this.historial.includes(lugar.toLocaleLowerCase())){
+
+            return;
+
+        }
+
+        this.historial.unshift(lugar.toLocaleLowerCase());
+        this.guardarDB();
+
+    }
+
+    guardarDB() { 
+
+        const payload = {
+            historial : this.historial
+        };
+
+        fs.writeFileSync(this.dbPath, JSON.stringify(payload));
+        
+
+
+    }
+
+    leerDB(){
+        
+        if(!fs.existsSync(this.dbPath)) return;
+
+            const info = fs.readFileSync(this.dbPath, {encoding: 'utf-8'});
+            const data = JSON.parse(info);
+
+            this.historial = data.historial;
+
+           
+     
+
+    }
 }
 
 module.exports = Busquedas;
