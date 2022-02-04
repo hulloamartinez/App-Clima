@@ -33,7 +33,7 @@ class Busquedas{
             });
             */
 
-            const resp = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json?language=es&limit=5&access_token=pk.eyJ1IjoiaHVsbG9hZGV2IiwiYSI6ImNrejYzb292NTB3cGkyd21wNXcwbnRrbWgifQ.WHkRAEpkkBffU-o1gDxPqQ`)
+            const resp = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json?language=es&limit=5&access_token=${process.env.MAPBOX_KEY}`)
             
             return resp.data.features.map(lugar =>({
 
@@ -51,8 +51,29 @@ class Busquedas{
             return [];
        
         }
+    }
 
-        
+    async climaLugar (lat, long) {
+
+        try {
+
+            const resp = await axios.get(`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${process.env.OPENWEATHER_KEY}`);
+
+            const {weather, main} = resp.data;
+
+            return {
+                desc: weather[0].description,
+                min: main.temp_min,
+                max: main.temp_max,
+                temp: main.temp
+            }
+            
+        } catch (error) {
+
+            console.log(error);
+            return (error)
+            
+        }
 
 
     }
