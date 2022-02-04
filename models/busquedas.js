@@ -10,9 +10,10 @@ class Busquedas{
     }
     get paramsMaxbox(){
         return {
+        'access-token': process.env.MAPBOX_KEY,
         'limit' : 5,
-        'language': 'es',
-        'access-token': process.env.MAPBOX_KEY
+        'language': 'es'
+        
         }
 
     }
@@ -27,16 +28,24 @@ class Busquedas{
             });
             */
 
-            const resp = await axios.get( `https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json`, {
+            /*const resp = await axios.get( `https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json`, {
                 params: this.paramsMaxbox
             });
-            console.log(`${resp} ++++++++++++++++++++++++`);
+            */
 
-            //const resp = await instance.get();
-
-            console.log(resp.data);
-            return []; // devolver los lugares relacionados (solo
+            const resp = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json?language=es&limit=5&access_token=pk.eyJ1IjoiaHVsbG9hZGV2IiwiYSI6ImNrejYzb292NTB3cGkyd21wNXcwbnRrbWgifQ.WHkRAEpkkBffU-o1gDxPqQ`)
             
+            return resp.data.features.map(lugar =>({
+
+                id: lugar.id,
+                nombre: lugar.place_name,
+                lng: lugar.center[0],
+                lat: lugar.center[1]
+
+            }));
+
+
+
         } catch (error) {
             console.log(error);
             return [];
